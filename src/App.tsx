@@ -16,9 +16,9 @@ const router = createBrowserRouter([
 function App() {
 
   return (
-    <>
+    <div className="bg-dark">
       <RouterProvider router={router} />
-    </>
+    </div>
   )
 }
 
