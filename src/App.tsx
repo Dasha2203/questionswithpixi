@@ -3,24 +3,24 @@ import * as PIXI from "pixi.js";
 import { lazy, Suspense, useRef } from "react";
 import { Spinner } from "react-bootstrap";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Main from "./Screens/Main";
-import Question from "./Screens/Question";
-import Result from "./Screens/Result";
 
 const GamePage = lazy(() => import('./Screens/Game'));
+const MainPage = lazy(() => import('./Screens/Main'));
+const QuestionPage = lazy(() => import('./Screens/Question'));
+const ResultPage = lazy(() => import('./Screens/Result'));
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Main />,
+    element: <MainPage />,
   },
   {
     path: "question/:id",
-    element: <Question />,
+    element: <QuestionPage />,
   },
   {
     path: "result",
-    element: <Result />,
+    element: <ResultPage />,
   },
   {
     path: "game",
@@ -37,9 +37,9 @@ function App() {
   }));
 
   return (
-    <div className="bg-dark">
+    <div className="bg-dark min-vh-100 d-flex flex-column">
       <AppProvider value={appRef.current}>
-        <Suspense fallback={<Spinner animation="border" variant="light" />}>
+        <Suspense fallback={<Spinner className="my-auto align-self-center" animation="border" variant="light" />}>
           <RouterProvider router={router} />
         </Suspense>
       </AppProvider>
