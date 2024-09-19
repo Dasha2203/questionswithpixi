@@ -30,7 +30,7 @@ const Question = () => {
       return
     }
 
-    navigate(`/result`)
+    navigate(`/game`)
   }
 
   function handleBackClick() {

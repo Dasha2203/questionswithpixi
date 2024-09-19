@@ -1,43 +1,50 @@
+import { Button, Container, ProgressBar } from "react-bootstrap";
+import { useEffect, useRef, useState } from "react";
+import { Stage } from "@pixi/react";
 
-import React, { useMemo } from "react"
-import { Container } from "react-bootstrap";
-import { BlurFilter, TextStyle } from 'pixi.js';
-import { Stage, Container as Canvas, Sprite, Text } from '@pixi/react';
+import MyComponent from "./Game";
+import { Size } from "./types";
+import { useNavigate } from "react-router-dom";
 
 const Game = () => {
-  const blurFilter = useMemo(() => new BlurFilter(2), []);
-  const bunnyUrl = 'https://pixijs.io/pixi-react/img/bunny.png';
+  const [size, setSize] = useState<Size>({ width: 400, height: 300 })
+  const [erasedArea, setErasedArea] = useState(0)
+  const ref = useRef<HTMLDivElement | null>(null)
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (!ref.current) return
+
+    setSize({
+      width: ref.current.clientWidth,
+      height: ref.current.clientWidth / 16 * 9
+    })
+  }, [ref])
 
   return (
     <Container className="pt-5 min-vh-100 text-white">
-
-      <Stage width={800} height={600} options={{ background: 0x1099bb }}>
-        <Sprite image={bunnyUrl} x={300} y={150} />
-        <Sprite image={bunnyUrl} x={500} y={150} />
-        <Sprite image={bunnyUrl} x={400} y={200} />
-
-        <Canvas x={200} y={200}>
-          <Text
-            text="Hello World"
-            anchor={0.5}
-            x={220}
-            y={150}
-            filters={[blurFilter]}
-            style={
-              new TextStyle({
-                align: 'center',
-                fill: '0xffffff',
-                fontSize: 50,
-                letterSpacing: 20,
-                dropShadow: true,
-                dropShadowColor: '#E72264',
-                dropShadowDistance: 6,
-              })
-            }
-          />
-        </Canvas>
-      </Stage>
-
+      <div ref={ref} className="w-100 w-md-50 mx-auto">
+        <h2 className="h2 text-center mb-4">
+          Чтобы посмотреть результат, сотрите 80% области
+        </h2>
+        <ProgressBar striped variant="info" now={erasedArea} className="mb-2" />
+        <Stage
+          width={size.width}
+          height={size.height}
+          options={{ backgroundColor: 0x1099bb }}
+        >
+          <MyComponent setErasedArea={setErasedArea} size={size} />
+        </Stage>
+        <Button
+          variant="success"
+          size="lg"
+          className="d-block d-md ms-auto mt-5 w-100"
+          onClick={() => navigate('/result')}
+          disabled={erasedArea < 80}
+        >
+          Завершить
+        </Button>
+      </div>
     </Container>
   )
 };
